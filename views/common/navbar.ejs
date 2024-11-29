@@ -11,9 +11,13 @@
 
 <nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-light navbar-shadow container-xxl">
     <div class="navbar-container d-flex content">
-        <div class="user-nav d-sm-flex d-none" style="font-size: x-large;">
+        
+        <div class="user-nav d-lg-flex d-none" style="font-size: x-large;">
             <b><%= title %></b>
         </div>
+        <ul class="nav navbar-nav d-xl-none">
+            <li class="nav-item d-flex align-items-center"><a class="nav-link menu-toggle" href="#"><i class="ficon" data-feather="menu"></i></a></li>
+        </ul>
         <ul class="nav navbar-nav align-items-center ms-auto">
             <li class="nav-item dropdown dropdown-user">
                 <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -25,7 +29,7 @@
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
-                    <a class="dropdown-item" href="/profile"><i class="me-50" data-feather="user"></i> Profile</a>
+                    <a class="dropdown-item" href="/passcode"><i class="me-50" data-feather="user"></i> Profile</a>
                     <a class="dropdown-item" href="/password"><i class="me-50" data-feather="lock"></i> Password</a>
                     <a class="dropdown-item" href="#" id="logout-link"><i class="me-50" data-feather="power"></i> Logout</a>
                 </div>

@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html>
+<html class="loading" lang="en" data-textdirection="ltr">
+<!-- BEGIN: Head-->
+<head>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  
+
+    <!-- BEGIN: Head-->
+    <%- include('../common/header.ejs'); %>
+    <!-- END: Head-->
+
+    <style>
+        
+        .card-datatable {
+            padding: 20px; 
+        }
+       
+    </style>
+</head>
+<!-- END: Head-->
+
+<!-- BEGIN: Body-->
+<body class="vertical-layout vertical-menu-modern navbar-floating footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="">
+
+    <!-- BEGIN: Header-->
+    <%- include('../common/navbar.ejs'); %>
+    <!-- END: Header-->
+
+    <!-- BEGIN: Main Menu-->
+    <%- include('../common/sidebar.ejs'); %>
+    <!-- END: Main Menu-->
+
+    <!-- BEGIN: Content-->
+    <div class="app-content content">
+        <div class="content-overlay"></div>
+        <div class="header-navbar-shadow"></div>
+        <div class="content-wrapper container-xxl p-0">
+            <div class="content-header row"></div>
+            <div class="content-body">
+                <!-- users list start -->
+                <section class="app-user-list">
+                    
+                    <!-- users filter start -->
+                    <!-- users filter end -->
+                    <!-- list section start -->
+                    <div class="card">
+                        
+                    <div class="card-datatable table-responsive pt-0">
+                        <table id="myTable" class="user-list-table table">
+                            <thead class="table-light">
+                                <tr>
+                                  <th>Sr.no</th>
+                                  <th>User Name</th>
+                                  <th>Rating</th>
+                                  <th>Reviews</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <% data.forEach((item, i) => { %>
+                                <tr data-id="<%= item.id %>">
+                                  <td><%= i + 1 %></td>
+                                  <td>
+                                    <% if (item.usersss && item.usersss.name) { %> <%=
+                                    item.usersss.name %> <% } else { %>
+                                    <span>No User</span>
+                                    <% } %>
+                                  </td>
+                                  <td>
+                                    <%= item.rating%>
+                                    </div>
+                                  </td>
+                                   <td><%=item.review%></td>
+                                  
+                                </tr>
+                                <% }) %>
+                              </tbody>   
+                        </table>
+                    </div>
+                        <!-- Modal to add new user starts-->
+                        <!-- Modal to add new user Ends-->
+                    </div>
+                    <!-- list section end -->
+                </section>
+                <!-- users list ends -->
+            </div>
+        </div>
+    </div>
+    <!-- END: Content-->
+
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
+
+    <!-- BEGIN: Footer-->
+    <%- include('../common/footer.ejs'); %>
+    <!-- END: Footer-->
+
+    <!-- BEGIN: Vendor JS-->
+    <script src="../../../app-assets/vendors/js/vendors.min.js"></script>
+    <!-- END: Vendor JS-->
+
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="../../../app-assets/vendors/js/charts/apexcharts.min.js"></script>
+    <script src="../../../app-assets/vendors/js/extensions/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- Added SweetAlert2 CDN -->
+    <!-- END: Page Vendor JS-->
+
+    <!-- BEGIN: Theme JS-->
+    <script src="../../../app-assets/js/core/app-menu.js"></script>
+    <script src="../../../app-assets/js/core/app.js"></script>
+    <!-- END: Theme JS-->
+
+    <!-- BEGIN: Page JS-->
+    <script src="../../../app-assets/js/scripts/pages/dashboard-ecommerce.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- END: Page JS-->
+
+    <script>
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+        });
+
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+
+            $(document).on("click", ".status-toggle", function() {
+                let button = $(this);
+                let userId = button.attr("data-id");
+                let currentStatus = button.attr("data-status");
+                let newStatus = currentStatus === "1" ? "0" : "1"; 
+
+                $.ajax({
+                    method: "POST",
+                    url: "/productstatus",
+                    data: {
+                        id: userId,
+                        status: newStatus,
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            if (newStatus === "1") {
+                                button.text("InActive").removeClass("btn-info").addClass("btn-warning");
+                            } else {
+                                button.text("Active").removeClass("btn-warning").addClass("btn-info");
+                            }
+                            button.attr("data-status", newStatus);
+                            toastr.success('Status updated successfully.');
+                        } else {
+                            toastr.error('Status change failed.');
+                        }
+                    },
+                    error: function() {
+                        toastr.error('An error occurred while changing the status.');
+                    }
+                });
+            });
+
+        });
+
+        function deleteUser(user_id, event) {
+            event.preventDefault(); // Prevent default link action
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+
+            swalWithBootstrapButtons.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: `/deleted/${user_id}`,
+                        data: {
+                            id: user_id
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                swalWithBootstrapButtons.fire({
+                                    title: "Deleted!",
+                                    text: "The Product has been deleted.",
+                                    icon: "success"
+                                }).then(() => {
+                                    $(`tr[data-id="${user_id}"]`).remove();
+                                });
+                            } else {
+                                swalWithBootstrapButtons.fire({
+                                    title: "Error!",
+                                    text: "Something went wrong.",
+                                    icon: "error"
+                                });
+                            }
+                        },
+                        error: function() {
+                            swalWithBootstrapButtons.fire({
+                                title: "Error!",
+                                text: "An error occurred while deleting the product",
+                                icon: "error"
+                            });
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    swalWithBootstrapButtons.fire({
+                        title: "Cancelled",
+                        text: "The Product is safe :)",
+                        icon: "error"
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+<!-- END: Body-->
+</html>
+
+
+

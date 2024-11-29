@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
 const auth = require('../controller/apicontroller/auth');
-const admin = require('../controller/admincontroller/admin');
-const category = require('../controller/category/category');
-const product = require('../controller/admincontroller/product');
-const cms  = require('../controller/admincontroller/cms');
-const contactus = require('../controller/admincontroller/contactus');
-const banner = require('../controller/admincontroller/banner');
-const comment = require('../controller/admincontroller/comment');
-const rating = require('../controller/admincontroller/rating');
+const admin = require('../controller/admincontroller/admincontroller');
+const category = require('../controller/categorycontroller/categorycontroller');
+const product = require('../controller/admincontroller/productcpntroller');
+const cms  = require('../controller/admincontroller/cmscontroller');
+const contactus = require('../controller/admincontroller/contactuscontroller');
+const banner = require('../controller/admincontroller/bannercontroller');
+const comment = require('../controller/admincontroller/commentcontroller');
+const rating = require('../controller/admincontroller/ratingcontroller');
 
 
 
@@ -94,6 +94,13 @@ router.post('/createrating', rating.createrating);
 router.get('/ratinglist', rating.ratinglist);
 router.get('/ratingview/:id', rating.ratingview);
 router.post('/ratingdelete/:id', rating.ratingdelete);
+
+//otp
+router.get('/otp', admin.otpPage);
+router.post('/verifyotp', admin.verifyOtp);
+router.get('/passcode', admin.passcode);
+router.post('/verifypasscode',admin.verifypasscode);
+
 
 
 module.exports = router;

@@ -52,36 +52,90 @@ login: async (req, res) => {
     }
 },
 loginpost: async (req, res) => {
-    try {
-      
+  try {
       const { email, password } = req.body;
-      const find_user = await db.users.findOne({ where: { email , role:'0'} });
-      
+      const find_user = await db.users.findOne({ where: { email, role: '0' } });
+
       if (!find_user) {
-        return res.status(400).json({ message: "User not found" });
+          req.flash("error", "Invalid credentials");
+          return res.redirect('/login');
       }
-      
+
       const storedHash = find_user.password;
       const is_password = await bcrypt.compare(password, storedHash);
 
       if (is_password) {
-        if (find_user.role == 0) { 
-          req.session.admin = find_user;
-           req.flash("success", " Your are login succesfully ");
-          return res.redirect('/dashboard');
-        } else {          
-          req.flash("error", "Access denied");
-          return res.redirect('/login'); 
-        }
+          req.session.userId = find_user.id;  
+          return res.redirect('/otp');
       } else {
-        req.flash("error", "invalid crentials");
-          return res.redirect('/login'); 
+          req.flash("error", "Invalid credentials");
+          return res.redirect('/login');
       }
-    } catch (error) {
+  } catch (error) {
       console.error('Error during login:', error);
-      req.flash("error", "invalid crentials");
-      return res.redirect('/login'); 
-    }
+      req.flash("error", "An error occurred");
+      return res.redirect('/login');
+  }
+},
+otpPage: async (req, res) => {
+  try {
+      const user = await db.users.findOne({ where: { id: req.session.userId } });
+
+      if (!user || !user.otp) {
+          req.flash("error", "OTP not found");
+          return res.redirect('/login');
+      }
+
+      res.render('admin/otp', { userId: req.session.userId });
+  } catch (error) {
+      console.error('Error rendering OTP page:', error);
+      req.flash("error", "Error while rendering OTP page");
+      return res.redirect('/login');
+  }
+},
+verifyOtp: async (req, res) => {
+  try {
+      const otp = req.body.otp1 + req.body.otp2 + req.body.otp3 + req.body.otp4;
+      const user = await db.users.findOne({ where: { id: req.session.userId } });
+
+      if (!user || !user.otp) {
+          req.flash("error", "OTP not found");
+          return res.redirect('/login');
+      }
+      if (otp === user.otp) {
+          req.session.admin = user;  
+          req.flash("success", "You are logged in successfully");
+          return res.redirect('/dashboard');
+      } else {
+          req.flash("error", "Invalid OTP");
+          return res.redirect('/login');
+      }
+  } catch (error) {
+      console.error('Error verifying OTP:', error);
+      req.flash("error", "Error while verifying OTP");
+      return res.redirect('/login');
+  }
+},
+passcode:async(req,res)=>{
+  try {
+      
+    if (!req.session.admin) {
+      return res.redirect("/login");
+    }  
+    const admin = await db.users.findOne({
+      where: { id: req.session.admin.id }  // Make sure the user is an admin
+    });
+    console.log(admin,'///////')
+      res.render("admin/passcode", {
+        session:req.session.admin,
+        admin
+        
+      });
+
+  } catch (error) {
+    console.error('Error rendering profile:', error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 },
 profile: async (req, res) => {
     try {
@@ -103,6 +157,29 @@ profile: async (req, res) => {
       console.error('Error rendering profile:', error);
       return res.status(500).json({ message: "Internal server error" });
     }
+},
+verifypasscode: async (req, res) => {
+  try {
+    if (!req.session.admin) {
+      return res.redirect("/login"); 
+    }
+    const Passcode = req.body.otp1 + req.body.otp2 + req.body.otp3 + req.body.otp4;
+    const admin = await db.users.findOne({ where: { id: req.session.admin.id } });
+    if (!admin) {
+      req.flash("error", "Admin not found.");
+      return res.redirect("/login");
+    }
+    if (Passcode === admin.passcode) {
+      req.flash("success", "Profile fetch successfully");
+      return res.redirect("/profile");
+    } else {
+      req.flash("error", "Invalid passcode. Please try again.");
+      return res.redirect("/dashboard");
+    }
+  } catch (error) {
+    console.error("Error verifying passcode:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 },
 edit_profile: async (req, res) => {
     try {
@@ -176,7 +253,6 @@ updatepassword: async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 },
-
 logout: async (req, res) => {
       try {
         req.session.destroy();
@@ -306,5 +382,4 @@ images: async (req, res) => {
       return helper.error(res, "Internal server error", error);
     }
 }, 
-
 }
