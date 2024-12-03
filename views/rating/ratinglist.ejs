@@ -87,7 +87,7 @@
                           <% } %>
                         </div>
                       </td>
-                       <td><%=item.review%></td>
+                       <td><%=item.review ? item.review : 'no review'%></td>
                       <td>
                         <a
                           href="/ratingview/<%= item.id %>"
@@ -165,13 +165,10 @@
 
       $(document).ready(function () {
         $("#myTable").DataTable();
-
-        // Event delegation for status toggle button
-      
       });
 
       function deleteUser(user_id, event) {
-        event.preventDefault(); // Prevent the default action of the link
+        event.preventDefault(); 
 
         const swalWithBootstrapButtons = Swal.mixin({
           customClass: {

@@ -69,10 +69,9 @@
                                     <% } %>
                                   </td>
                                   <td>
-                                    <%= item.rating%>
-                                    </div>
+                                    <%= item.rating ? item.rating : 'No Rating'%>
                                   </td>
-                                   <td><%=item.review%></td>
+                                   <td><%=item.review ? item.review : 'No Review' %></td>
                                   
                                 </tr>
                                 <% }) %>

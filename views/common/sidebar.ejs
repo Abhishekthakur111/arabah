@@ -33,54 +33,50 @@
     <div class="shadow-bottom"></div>
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-            <li class="nav-item" id="nav-dashboard">
+            <li class="nav-item <%= title === 'Dashboard' ? 'active' : '' %>">
                 <a class="d-flex align-items-center" href="/dashboard"><i data-feather="home"></i><span class="menu-title text-truncate" data-i18n="Dashboards">Dashboard</span><span class="badge badge-light-warning rounded-pill ms-auto me-1"></span></a>
             </li>
-            <li class="nav-item" id="nav-userlist">
-                <a class="d-flex align-items-center" href="/userlist"><i data-feather="users"></i><span class="menu-title text-truncate" data-i18n="Userlist">Users</span></a>
-            </li>
-            <li class="nav-item" id="nav-categorlist">
+            <li class="nav-item <%= title === 'Users' || title === 'User Detail' ? 'active' : '' %>">
+            <a class="d-flex align-items-center" href="/userlist">
+                <i data-feather="users"></i>
+                <span class="menu-title text-truncate" data-i18n="user">Users</span>
+            </a>
+           </li>
+            <li class="nav-item <%= title === 'Categories' || title === 'Category Detail' || title === 'Add Category' || title === 'Edit Category' ? 'active' : '' %>" >
                 <a class="d-flex align-items-center" href="/categorylist"><i data-feather="folder"></i><span class="menu-title text-truncate" data-i18n="">Categories</span></a>
             </li>
-            <li class="nav-item" id="nav-categorlist">
+            <li class="nav-item <%= title === 'Products' || title === 'Product Detail' || title === 'Add product' || title === 'Edit product' || title === 'Product Reviews' ? 'active' : '' %>">
                 <a class="d-flex align-items-center" href="/productlist"><i data-feather="shopping-cart"></i><span class="menu-title text-truncate" data-i18n="">Products</span></a>
             </li>
-            <li class="nav-item" id="nav-categorlist">
+            <li class="nav-item <%= title === 'Banners' || title === 'Edit Banner' ? 'active' : '' %>">
                 <a class="d-flex align-items-center" href="/banners"><i data-feather="image"></i><span class="menu-title text-truncate" data-i18n="">Banners</span></a>
             </li>
-            <li class="nav-item" id="nav-categorlist">
+            <li class="nav-item <%= title === 'Comments' || title === 'Comment Detial'  ? 'active' : '' %>">
                 <a class="d-flex align-items-center" href="/commentlist"><i data-feather="message-circle"></i><span class="menu-title text-truncate" data-i18n="">Comments</span></a>
             </li>
-            <li class="nav-item" id="nav-categorlist">
+            <li class="nav-item <%= title === 'Rating' || title === 'Rating Detail' ? 'active' : '' %>">
                 <a class="d-flex align-items-center" href="/ratinglist"><i data-feather="star"></i><span class="menu-title text-truncate" data-i18n="">Ratings</span></a>
             </li>
-            <li class="nav-item" id="nav-term">
+            <li class="nav-item <%= title === 'Contact Us' || title === 'Contact Detail' ? 'active' : '' %>">
                 <a class="d-flex align-items-center" href="/contactus"><i data-feather="phone"></i><span class="menu-title text-truncate" data-i18n="TermsConditions">Contact Us</span></a>
             </li>
-             <li class="nav-item" id="nav-privacy">
+             <li class="nav-item <%= title === 'Privacy Policy' ? 'active' : '' %>">
                 <a class="d-flex align-items-center" href="/privacy"><i data-feather="lock"></i><span class="menu-title text-truncate" data-i18n="Privacy">Privacy Policy</span></a>
             </li>
-            <li class="nav-item" id="nav-aboutus">
+            <li class="nav-item <%= title === 'About us' ? 'active' : '' %>">
                 <a class="d-flex align-items-center" href="/aboutus"><i data-feather="info"></i><span class="menu-title text-truncate" data-i18n="AboutUs">About Us</span></a>
             </li>
-            <li class="nav-item" id="nav-term">
+            <li class="nav-item <%= title === 'Terms&Conditons' ? 'active' : '' %>">
                 <a class="d-flex align-items-center" href="/term"><i data-feather="file-text"></i><span class="menu-title text-truncate" data-i18n="TermsConditions">Terms & Conditions</span></a>
             </li>
         </ul>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentPath = window.location.pathname;
-            const navItems = document.querySelectorAll('.nav-item'); 
-            navItems.forEach(function(item) {
-                const link = item.querySelector('a');
-                if (link.getAttribute('href') === currentPath) {
-                    item.classList.add('active'); 
-                } else {
-                    item.classList.remove('active'); 
-                }
-            });
-        });
-    </script>
-    
+    </div>    
 </div>
+
+<script>
+    $(window).on('load', function() {
+        if (feather) {
+            feather.replace({ width: 14, height: 14 });
+        }
+    });
+</script>

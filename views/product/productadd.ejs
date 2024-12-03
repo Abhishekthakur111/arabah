@@ -50,7 +50,7 @@
                           class="form-control"
                           required
                         >
-                          <option readonly>Select an book Product</option>
+                          <option readonly>Select an Product</option>
                           <!-- Placeholder option -->
                           <% data.forEach((data) => { %>
                           <option value="<%= data.id %>"  >
@@ -123,11 +123,7 @@
                     <button type="submit" class="btn btn-success" tabindex="3">
                       Add
                     </button>
-                    <button onclick="window.history.back()" class="btn btn-primary" tabindex="3">
-                      Back
-                    </button>
-                    
-
+                    <a class="btn btn-primary" href="/productlist">Back</a>
                   </form>
                 </div>
               </div>

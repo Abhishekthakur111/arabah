@@ -66,7 +66,7 @@ module.exports = {
             where:{id:req.params.id}});
         
           res.render("contactus/contactview.ejs", {
-            title: "Details",
+            title: "Contact Detail",
             data,
             session: req.session.admin,
           });

@@ -88,7 +88,7 @@ module.exports = {
         const data = await db.category.findOne({where:{id:req.params.id}});
         console.log(data,'/////////////////')
         res.render("category/categoryview", {
-          title: "Details",
+          title: "Category Detail",
           data,
           session: req.session.admin,
         });

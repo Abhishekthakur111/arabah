@@ -69,7 +69,7 @@ module.exports = {
             
     
             res.render("comment/commentview.ejs", {
-                title: "View",
+                title: "Comment Detial",
                 data,
                 session: req.session.admin,
             });

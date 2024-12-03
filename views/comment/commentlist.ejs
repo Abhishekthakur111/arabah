@@ -86,7 +86,7 @@
                         <span>No Product</span>
                         <% } %>
                       </td>
-                      <td><%= item.comment %></td>
+                      <td><%= item.comment ? item.comment : 'No Comment' %></td>
 
                       <td>
                         <a

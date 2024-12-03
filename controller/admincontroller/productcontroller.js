@@ -122,7 +122,7 @@ module.exports = {
             const userCount = ratingData[0].get('userCount');
     
             res.render("product/productview", {
-                title: "Product Details",
+                title: "Product Detail",
                 data: productData,
                 averageRating: averageRating ? parseFloat(averageRating).toFixed(1) : 0,
                 userCount: userCount || 0,
@@ -226,7 +226,6 @@ module.exports = {
     productreview: async (req, res) => {
         try {
             console.log("Product ID:", req.params.id);
-    
             const data = await db.rating.findAll({
                 where: { product_id: req.params.id },
                 include: [
@@ -234,7 +233,7 @@ module.exports = {
                 ]
             });
             res.render("product/productreview.ejs", {
-                title: "Reviews",
+                title: "Product Reviews",
                 data: data,
                 session: req.session.admin,
             });

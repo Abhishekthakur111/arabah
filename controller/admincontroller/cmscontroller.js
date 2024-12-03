@@ -78,7 +78,7 @@ module.exports = {
                 where: { type: '3' },     
                  });
             res.render("cms/terms", {
-                title: "Terms & Conditons",
+                title: "Terms&Conditons",
                 session: req.session.admin,
               privacy,
             });

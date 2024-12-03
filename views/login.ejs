@@ -99,7 +99,7 @@
                                         <input class="form-control" id="email" type="email" name="email" placeholder="john@example.com" aria-describedby="login-email" autofocus="" tabindex="1" required/>
                                         <div class="error-message" style="color: red; display: none;"></div>
                                     </div>
-                                    <div class="mb-1">
+                                    <div class="mb-2">
                                         <div class="d-flex justify-content-between">
                                             <label class="form-label" for="password">Password</label>
                                         </div>
@@ -186,13 +186,28 @@
       },
       
     });
-
-    
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const loginForm = document.getElementById('login-form');
+        const rememberMeCheckbox = document.getElementById('remember-me');
+
+        loginForm.addEventListener('submit', function (e) {
+            if (!rememberMeCheckbox.checked) {
+                e.preventDefault();
+                toastr.error('You must check "Remember Me" to log in.', {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-top-right",
+                    timeOut: 5000
+                });
+            }
+        });
+    });
+</script>
+
 <% if(messages.success){ %>
     <script>
-  
-  
       toastr.options = {
         "closeButton": true,
         "debug": false,
@@ -213,12 +228,8 @@
       toastr.success('<%= messages.success%>')
     </script>
     <% } %>
-  
-  
       <% if(messages.error){ %>
         <script>
-  
-  
           toastr.options = {
             "closeButton": true,
             "debug": false,

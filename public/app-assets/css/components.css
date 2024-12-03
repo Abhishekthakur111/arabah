@@ -153,6 +153,15 @@ html .navbar-floating.footer-hidden .app-content .kanban-wrapper {
  1.3rem + 0rem
  )); } }
 
+ .card_custom {
+  padding: 20px 15px;
+  box-shadow: 0px 0px 7px #ddd;
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
 html .navbar-floating.footer-fixed .app-content .content-area-wrapper,
 html .navbar-floating.footer-fixed .app-content .kanban-wrapper {
   height: calc(

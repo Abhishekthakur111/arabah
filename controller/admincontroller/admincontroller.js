@@ -3,6 +3,15 @@ const bcrypt = require('bcrypt');
 const helper = require("../../helper/helper");
 const path = require("path");
 const uuid = require("uuid").v4;
+const crypto = require('crypto');
+// const nodemailer = require('nodemailer');
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail', // Or use your preferred email service
+//   auth: {
+//     user: process.env.EMAIL_USER, // Your email address
+//     pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+//   },
+// });
 
 
 module.exports = {
@@ -57,7 +66,7 @@ loginpost: async (req, res) => {
       const find_user = await db.users.findOne({ where: { email, role: '0' } });
 
       if (!find_user) {
-          req.flash("error", "Invalid credentials");
+          req.flash("error", "Invalid Email");
           return res.redirect('/login');
       }
 
@@ -68,7 +77,7 @@ loginpost: async (req, res) => {
           req.session.userId = find_user.id;  
           return res.redirect('/otp');
       } else {
-          req.flash("error", "Invalid credentials");
+          req.flash("error", "Invalid Password");
           return res.redirect('/login');
       }
   } catch (error) {
@@ -118,14 +127,12 @@ verifyOtp: async (req, res) => {
 },
 passcode:async(req,res)=>{
   try {
-      
     if (!req.session.admin) {
       return res.redirect("/login");
     }  
     const admin = await db.users.findOne({
-      where: { id: req.session.admin.id }  // Make sure the user is an admin
+      where: { id: req.session.admin.id } 
     });
-    console.log(admin,'///////')
       res.render("admin/passcode", {
         session:req.session.admin,
         admin
@@ -222,10 +229,10 @@ password: async(req,res)=>{
 },
 updatepassword: async (req, res) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
-
   try {
     if (!req.session.admin) return res.redirect("/login");
     if (!oldPassword || !newPassword || !confirmPassword) {
+      req.flash("error", "All fields are required");
       return res.status(400).json({ message: 'All fields are required' });
     }
     if (newPassword !== confirmPassword) {
@@ -234,6 +241,7 @@ updatepassword: async (req, res) => {
     }
     const user = await db.users.findOne({ where: { id: req.session.admin.id } });
     if (!user) {
+      req.flash("error", "User not found");
       return res.status(404).json({ message: 'User not found' });
     }
     const isMatch = await bcrypt.compare(oldPassword, user.password);
@@ -243,10 +251,12 @@ updatepassword: async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
+    const newOtp = crypto.randomInt(1000, 9999).toString(); 
+    user.otp = newOtp;
     await user.save();
     req.session.admin.password = hashedPassword;
-    req.flash("success", "Password updated successfully");
-    res.redirect('/login'); 
+    req.flash("success", "Password updated successfully. A new OTP has been generated.");
+    res.redirect('/login');
   } catch (error) {
     console.error('Error updating password:', error);
     req.flash("error", "Server error");
@@ -293,14 +303,14 @@ view: async (req, res) => {
       });
       let title;
       if (view.role === "1") {
-        title = "Details";
+        title = "User Detail";
       } else if (view.role === "2") {
-        title = "Details";
+        title = "User Detail";
       }else if (view.role === '3'){
-        title = "Details";
+        title = "User Detail";
       }
        else {
-        title = "User Details"; 
+        title = "User Detail"; 
       }
       res.render("admin/view.ejs", {
         session: req.session.admin,
@@ -382,4 +392,62 @@ images: async (req, res) => {
       return helper.error(res, "Internal server error", error);
     }
 }, 
+// updatepassword: async (req, res) => {
+//   const { oldPassword, newPassword, confirmPassword } = req.body;
+//   try {
+//     if (!req.session.admin) return res.redirect("/login");
+//     if (!oldPassword || !newPassword || !confirmPassword) {
+//       req.flash("error", "All fields are required");
+//       return res.status(400).json({ message: 'All fields are required' });
+//     }
+//     if (newPassword !== confirmPassword) {
+//       req.flash("error", "New password and confirm password do not match");
+//       return res.status(400).json({ message: 'New password and confirm password do not match' });
+//     }
+
+//     const user = await db.users.findOne({ where: { id: req.session.admin.id } });
+//     if (!user) {
+//       req.flash("error", "User not found");
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+
+//     const isMatch = await bcrypt.compare(oldPassword, user.password);
+//     if (!isMatch) {
+//       req.flash("error", "Old password is incorrect");
+//       return res.status(400).json({ message: 'Old password is incorrect' });
+//     }
+
+//     const hashedPassword = await bcrypt.hash(newPassword, 10);
+//     const newOtp = crypto.randomInt(1000, 9999).toString();
+
+//     user.password = hashedPassword;
+//     user.otp = newOtp;
+//     await user.save();
+
+//     req.session.admin.password = hashedPassword;
+
+//     // Send OTP to email
+//     const mailOptions = {
+//       from: process.env.EMAIL_USER,
+//       to: user.email, // Replace with the user's email
+//       subject: 'Your New OTP',
+//       text: `Your new OTP is: ${newOtp}`,
+//     };
+
+//     transporter.sendMail(mailOptions, (error, info) => {
+//       if (error) {
+//         console.error('Error sending OTP email:', error);
+//       } else {
+//         console.log('OTP email sent:', info.response);
+//       }
+//     });
+
+//     req.flash("success", "Password updated successfully. A new OTP has been generated and sent to your email.");
+//     res.redirect('/login');
+//   } catch (error) {
+//     console.error('Error updating password:', error);
+//     req.flash("error", "Server error");
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// },
 }

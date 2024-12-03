@@ -58,7 +58,7 @@
                                     <% data.forEach((item, i) => { %>
                                     <tr data-id="<%= item.id %>">
                                         <td><%= i + 1 %></td>
-                                        <td><%= item.name %></td>
+                                        <td><%= item.name ? item.name : 'No name' %></td>
                                         <td>
                                             <% if (item.image) { %>
                                                 <img src="<%= item.image %>" alt="category Image" style="width: 50px; height: 50px; object-fit: cover;">

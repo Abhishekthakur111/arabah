@@ -65,7 +65,7 @@ module.exports = {
                 where:{id:req.params.id}});
           
             res.render("rating/ratingview.ejs", {
-                title: "View",
+                title: "Rating Detail",
                 data,
                 session: req.session.admin,
             });
