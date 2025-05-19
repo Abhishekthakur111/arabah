@@ -69,7 +69,7 @@
                                                 </div>
                                             <% } %>
                                         </td>
-                                        <td><%= item.email %></td>
+                                        <td><%= item.email ? item.email : 'no email' %></td>
                                         <td><%= item.phone_number %></td>
                                         <td><%= item.address %></td>
                                         <td>

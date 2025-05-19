@@ -256,7 +256,7 @@ updatepassword: async (req, res) => {
     await user.save();
     req.session.admin.password = hashedPassword;
     req.flash("success", "Password updated successfully. A new OTP has been generated.");
-    res.redirect('/login');
+    res.redirect('/otp');
   } catch (error) {
     console.error('Error updating password:', error);
     req.flash("error", "Server error");
@@ -376,9 +376,7 @@ images: async (req, res) => {
         }
       }
   
-      if (filepaths.length === 0) {
-        return res.status(400).json({ error: "No valid images found or upload failed" });
-      }
+     
       const data = filepaths.map(filepath => ({
         user_id,
         image: filepath

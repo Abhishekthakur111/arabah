@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const helper = require('../../helper/helper');
 const db = require('../../models');
 const { Validator } = require('node-input-validator');

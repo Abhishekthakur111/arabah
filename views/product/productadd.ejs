@@ -39,6 +39,16 @@
                     enctype="multipart/form-data"
                   >
                     <div class="form-group row">
+                      <div class="mb-1 col-3">
+                        <label for="image" class="form-label">Image</label>
+                        <div id="imagePreview" style="margin-bottom: 0px;">
+                            <img id="preview" src="" alt="Preview Image" style="display: none; width: 275px; height: 300px; object-fit: cover; border: 1px solid #ddd; border-radius: 5px;" />
+                        </div>
+                        
+                        <input type="file" class="form-control" id="image" name="image" aria-describedby="image" tabindex="1" required onchange="previewImage(event)"/>
+                        <!-- Image preview -->
+                        
+                      </div>
                       <div>
                         <label for="category" class="col-sm-3 col-form-label">
                           Category Name</label
@@ -74,20 +84,6 @@
                         required
                       />
                     </div>
-
-                    <div class="mb-1">
-                      <label for="image" class="form-label">Image</label>
-                      <input
-                        type="file"
-                        class="form-control"
-                        id="image"
-                        name="image"
-                        aria-describedby="image"
-                        tabindex="1"
-                        required
-                      />
-                    </div>
-
                     <div class="mb-1">
                       <label for="price" class="form-label">Price</label>
                       <input
@@ -180,6 +176,25 @@
           event.preventDefault(); // Prevent the form from submitting
         }
       });
+    </script>
+      <script>
+        function previewImage(event) {
+            const preview = document.getElementById('preview');
+            const file = event.target.files[0];
+    
+            if (file) {
+                const reader = new FileReader();
+    
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+    
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
     </script>
     
   </body>

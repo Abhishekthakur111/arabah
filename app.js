@@ -14,7 +14,7 @@ var usersRouter = require('./routes/users');
 
   
 var app = express();
-const port = process.env.port || 9000;
+const port = process.env.port ;
 
 
 app.set('views', path.join(__dirname, 'views'));

@@ -48,16 +48,16 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: ""
     },
     otp: {
-      type: DataTypes.STRING(4),
-      allowNull: false,
-      defaultValue: ""
-    },
-    passcode: {
-      type: DataTypes.STRING(4),
+      type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: ""
     },
     date: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: ""
+    },
+    passcode: {
       type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: ""
